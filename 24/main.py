@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     for i, action_to_expectation in enumerate(actions_to_expectations):
         action, expectation = action_to_expectation
-        print(f"at index {i}")
+        print(f"Test {i}")
         assert(action == expectation)
 
     print("Success!")
