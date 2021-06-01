@@ -26,6 +26,12 @@ The results are derived from what `RegExp` says matches.
 # Output
 
 ```
+$ nodemon --watch './*' --exec "ts-node" ./main.ts
+[nodemon] 2.0.7
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): **/*
+[nodemon] watching extensions: ts,json
+[nodemon] starting `ts-node ./main.ts`
 regex: /*/ expr: ""
 regex: /.**/ expr: ""
 regex: /.**./ expr: ""
@@ -80,5 +86,19 @@ regex: /.*ab/ expr: "aab"
 regex: /.*ab/ expr: "aaab"
 regex: /.*ab/ expr: "abab"
 regex: /.*ab/ expr: "aaaabb"
+regex: /.*ab/ expr: "caab"
+regex: /a.*/ expr: "a"
+regex: /.*a.*/ expr: "a"
+regex: /.*a*.*a/ expr: "a"
+regex: /.*.*a.*.*/ expr: "a"
+regex: /..*a*.*/ expr: "a"
+regex: /a.*/ expr: "ab"
+regex: /.*a.*/ expr: "ab"
+regex: /.*a*b.*a/ expr: "ab"
+regex: /.*.*a.*.*/ expr: "ab"
+regex: /..*a*.*/ expr: "ab"
+errors:
+Success!
+[nodemon] clean exit - waiting for changes before restart
 ```
 

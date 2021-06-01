@@ -73,7 +73,7 @@ function matchSegments(segments: Segment[], expr: string): boolean {
         while (!matchFound) {
             matchFound = matchSegments(remainingSegments, expr)
             // found a further match, so try it again
-            if (segment.s === "." || segment.s === expr.charAt(0)) {
+            if ((expr.length > 0 && segment.s === ".") || segment.s === expr.charAt(0)) {
                 expr = expr.substring(1, expr.length)
             } else {
                 break 
@@ -95,7 +95,9 @@ function matchSegments(segments: Segment[], expr: string): boolean {
 
 function isValidRegex(regex: string): boolean {
     let followsAsterisk = true
-    for (const c of regex) {
+    for (let i = 0; i < regex.length; i++) {
+    // for (const c of regex) {
+        let c = regex.charAt(i)
         if (c === '*') {
             if (followsAsterisk) {
                 return false
@@ -143,6 +145,7 @@ const tests: TestCase[] = [
 ];
 
 // This code uses the actual RegExp implementation to test. 
+let errors: TestCase[] = []
 for (const tc of tests) {
     for (const regex of tc.regexes) {
         for (const expr of tc.exprs) {
@@ -158,16 +161,24 @@ for (const tc of tests) {
                 result = match(regex, expr)
                 if (expected === null) {
                     console.log(`  got ${result}, expected error`)
+                    errors.push({regexes: [regex], exprs: [expr]})
                 } else if (result !== expected) {
                     console.log(`  got ${result}, expected ${expected}`)
+                    errors.push({regexes: [regex], exprs: [expr]})
                 }
             } catch(e) {
                 if (expected !== null) {
                     console.log(`  got error, expected ${expected}`)
+                    errors.push({regexes: [regex], exprs: [expr]})
                 } 
             }
         }
     }
+}
+
+console.log(`errors: ${errors}`)
+if (errors.length === 0) {
+    console.log("Success!")
 }
 
 
