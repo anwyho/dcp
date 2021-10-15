@@ -2,8 +2,8 @@
 //
 // Implement regular expression matching with the following special characters:
 // 
-// . (period) which matches any single character
-// * (asterisk) which matches zero or more of the preceding element
+// `.` (period) which matches any single character
+// `*` (asterisk) which matches zero or more of the preceding element
 // That is, implement a function that takes in a string and a valid regular expression and returns 
 // whether or not the string matches the regular expression.
 // 
@@ -69,7 +69,7 @@ function matchSegments(segments, expr) {
         while (!matchFound) {
             matchFound = matchSegments(remainingSegments, expr);
             // found a further match, so try it again
-            if (segment.s === "." || segment.s === expr.charAt(0)) {
+            if ((expr.length > 0 && segment.s === ".") || segment.s === expr.charAt(0)) {
                 expr = expr.substring(1, expr.length);
             }
             else {
@@ -92,7 +92,6 @@ function matchSegments(segments, expr) {
 function isValidRegex(regex) {
     var followsAsterisk = true;
     for (var i = 0; i < regex.length; i++) {
-        // for (const c of regex) {
         var c = regex.charAt(i);
         if (c === '*') {
             if (followsAsterisk) {
@@ -127,6 +126,7 @@ var tests = [
     { regexes: ["a.*", ".*a.*", ".*a*b.*a", ".*.*a.*.*", "..*a*.*"], exprs: ["ab"] },
 ];
 // This code uses the actual RegExp implementation to test. 
+var errors = [];
 for (var _i = 0, tests_1 = tests; _i < tests_1.length; _i++) {
     var tc = tests_1[_i];
     for (var _a = 0, _b = tc.regexes; _a < _b.length; _a++) {
@@ -139,22 +139,29 @@ for (var _i = 0, tests_1 = tests; _i < tests_1.length; _i++) {
                 var guardedRegex = "^" + regex + "$";
                 expected = (new RegExp(guardedRegex)).test(expr);
             }
-            catch (e) { }
-            console.log("regex: /" + regex + "/ expr: \"" + expr + "\"");
+            catch (e) { /* received invalid regex, which is fine */ }
+            console.log("regex: /" + regex + "/ expr: \"" + (expr !== null && expr !== void 0 ? expr : "error") + "\"");
             try {
                 result = match(regex, expr);
-                if (expected === null) {
+                if (expected === undefined) {
                     console.log("  got " + result + ", expected error");
+                    errors.push({ regexes: [regex], exprs: [expr] });
                 }
                 else if (result !== expected) {
                     console.log("  got " + result + ", expected " + expected);
+                    errors.push({ regexes: [regex], exprs: [expr] });
                 }
             }
             catch (e) {
                 if (expected !== null) {
                     console.log("  got error, expected " + expected);
+                    errors.push({ regexes: [regex], exprs: [expr] });
                 }
             }
         }
     }
+}
+console.log("errors: " + errors);
+if (errors.length === 0) {
+    console.log("Success!");
 }
